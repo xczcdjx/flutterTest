@@ -9,16 +9,16 @@ class ToDoCls {
   ToDoCls({required this.id, required this.tit, this.done = false});
 }
 
-class HomePage extends StatefulWidget {
+class TodoWidget extends StatefulWidget {
   final String title;
 
-  const HomePage({super.key, required this.title});
+  const TodoWidget({super.key, required this.title});
 
   @override
-  State<HomePage> createState() => _HomePage();
+  State<TodoWidget> createState() => _TodoWidget();
 }
 
-class _HomePage extends State<HomePage> {
+class _TodoWidget extends State<TodoWidget> {
   List<ToDoCls> todos = [
     ToDoCls(id: '1', tit: "吃饭"),
     ToDoCls(id: '2', tit: "睡觉", done: true),
@@ -69,9 +69,14 @@ class _HomePage extends State<HomePage> {
             children: [Text('Todo')],
             mainAxisAlignment: MainAxisAlignment.center,
           ),
+          actions: [
+            ElevatedButton(onPressed: (){
+              _addTodo();
+            }, child: Text("Add Task"))
+          ],
         ),
         floatingActionButton:
-            TextButton(onPressed: _addTodo, child: Icon(Icons.add)),
+        TextButton(onPressed: _addTodo, child: Icon(Icons.add)),
         body: Column(
           children: [
             Container(
@@ -98,13 +103,13 @@ class _HomePage extends State<HomePage> {
                           Checkbox(
                               value: v.done,
                               onChanged: (f) => {
-                                    setState(() {
-                                      todos = todos.map((it) {
-                                        if (it.id == v.id) it.done = f!;
-                                        return it;
-                                      }).toList();
-                                    })
-                                  })
+                                setState(() {
+                                  todos = todos.map((it) {
+                                    if (it.id == v.id) it.done = f!;
+                                    return it;
+                                  }).toList();
+                                })
+                              })
                         ],
                       ),
                     ),

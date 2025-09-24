@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:fluttertest/widgets/HomePage.dart';
-import 'package:fluttertest/widgets/TestPage.dart';
+import 'package:fluttertest/pages/FirstPage.dart';
+import 'package:fluttertest/pages/HomePage.dart';
+import 'package:fluttertest/pages/SecondPage.dart';
+import 'package:fluttertest/pages/TestPage.dart';
 
 void main() {
   runApp(const MyApp());
@@ -13,16 +15,18 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Flutter Demo',
+      debugShowCheckedModeBanner: false, // 隐藏debug标志
+      title: 'Flutter Test',
       theme: ThemeData(
+        primaryColor: Colors.yellow,
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
         useMaterial3: true,
       ),
-      home:
-      const HomePage(title: 'flutter'),
+      home: const FirstPage(),
       routes: {
-        '/secondPage':(ctx)=>TestPage(),
-        '/homePage':(ctx)=>HomePage(title: 'flutter'),
+        '/homePage':(ctx)=>HomePage(),
+        '/testPage':(ctx)=>TestPage(),
+        '/secondPage':(ctx)=>SecondPage(),
       },
       // const TestPage()
     );
