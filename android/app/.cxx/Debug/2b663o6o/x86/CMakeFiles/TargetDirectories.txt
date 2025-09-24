@@ -1,0 +1,2 @@
+/Users/zhiqiangli/Desktop/FlutterProject/flutterTest/android/app/.cxx/Debug/2b663o6o/x86/CMakeFiles/edit_cache.dir
+/Users/zhiqiangli/Desktop/FlutterProject/flutterTest/android/app/.cxx/Debug/2b663o6o/x86/CMakeFiles/rebuild_cache.dir
