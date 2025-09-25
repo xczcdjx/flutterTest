@@ -1,28 +1,53 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
-import 'package:fluttertest/pages/HomePage.dart';
 import 'package:fluttertest/utils/hiveUtil.dart';
-import 'package:hive/hive.dart';
 import 'package:oktoast/oktoast.dart';
 
-import '../entity/todo_cls.dart';
-import '../utils/hiveUtilTypedAdapter.dart';
-
-class FirstPage extends StatefulWidget {
-  const FirstPage({super.key});
+class TodoPage extends StatefulWidget {
+  const TodoPage({super.key});
 
   @override
-  State<FirstPage> createState() => _FirstPageState();
+  State<TodoPage> createState() => _TodoPageState();
 }
 
-class _FirstPageState extends State<FirstPage> {
+class TodoCls {
+  String id;
+  String label;
+  bool done = false;
+
+  TodoCls({required this.id, required this.label});
+
+  TodoCls.f(this.id, this.label, bool d) : done = d;
+
+  TodoCls copyWith({String? id, String? label, bool? done}) {
+    return TodoCls.f(id ?? this.id, label ?? this.label, done ?? this.done);
+  }
+
+  Map<String, dynamic> toMap() {
+    return {
+      'id': id,
+      'label': label,
+      'done': done,
+    };
+  }
+
+  factory TodoCls.fromMap(Map<dynamic, dynamic> map) {
+    return TodoCls.f(
+      map['id'] as String,
+      map['label'] as String,
+      map['done'] as bool,
+    );
+  }
+}
+
+class _TodoPageState extends State<TodoPage> {
   /* List<TodoCls> todos = [
     TodoCls.f("1", "上班", true),
     TodoCls(id: "2", label: "摸鱼"),
     TodoCls(id: "3", label: "学习"),
   ];*/
 
-  List<TodoCls> todos = [];
+  List<TodoCls> todos=HiveUtil.getList<TodoCls>('todos', (map) => TodoCls.fromMap(map));
 
   // textController
   TextEditingController todoController = TextEditingController();
@@ -35,21 +60,19 @@ class _FirstPageState extends State<FirstPage> {
   void initState() {
     // TODO: implement initState
     super.initState();
-    _initHive();
+    // _initHive();
   }
 
   Future<void> _initHive() async {
-    final saveTodos = await HiveUtilTypeAdapter.getList<TodoCls>('todoBox');
-    // 获取单个
-    // final todo = await HiveUtilTypeAdapter.getByKey<TodoCls>('todoBox', saveTodos[1].id);
+    final saveTodos =
+    HiveUtil.getList<TodoCls>('todos', (map) => TodoCls.fromMap(map));
     setState(() {
       todos = saveTodos;
     });
   }
 
   Future<void> _saveHive() async {
-    await HiveUtilTypeAdapter.setList<TodoCls>('todoBox', todos,
-        keyExtractor: (t) => t.id);
+    await HiveUtil.setList<TodoCls>('todos', todos, (t) => t.toMap());
   }
 
   void _changeChecked(f, td) {
@@ -120,15 +143,13 @@ class _FirstPageState extends State<FirstPage> {
           ),
         ),
         actions: [
-          ElevatedButton(
-              onPressed: () {
-                setState(() {
-                  todos = [];
-                });
-                HiveUtil.deleteKey("todos");
-                showToast('删除成功', position: ToastPosition.bottom);
-              },
-              child: Text("Clear All"))
+          ElevatedButton(onPressed: (){
+            setState(() {
+              todos=[];
+            });
+            HiveUtil.deleteKey("todos");
+            showToast('删除成功',position: ToastPosition.bottom);
+          }, child: Text("Clear All"))
         ],
       ),
       // drawer
@@ -136,46 +157,46 @@ class _FirstPageState extends State<FirstPage> {
         padding: const EdgeInsets.symmetric(vertical: 20),
         child: todos.isNotEmpty
             ? ListView.builder(
-                itemCount: todos.length,
-                itemBuilder: (context, i) {
-                  final todo = todos[i];
-                  return Slidable(
-                    endActionPane:
-                        ActionPane(motion: ScrollMotion(), children: [
-                      SlidableAction(
-                        onPressed: (f) {
-                          _delTodo(todo.id);
-                        },
-                        borderRadius: BorderRadius.circular(10),
-                        icon: Icons.delete,
-                        backgroundColor: Colors.red,
-                      )
-                    ]),
-                    child: ListTile(
-                      leading: Text(
-                        "${i + 1}.",
-                        style: TextStyle(fontSize: 18),
-                      ),
-                      trailing: Checkbox(
-                          value: todo.done,
-                          onChanged: (f) {
-                            _changeChecked(f, todo);
-                          }),
-                      title: Text(
-                        todo.label,
-                        style: TextStyle(
-                            decoration:
-                                todo.done ? TextDecoration.lineThrough : null),
-                      ),
-                    ),
-                  );
-                })
-            : Center(
-                child: Text(
-                  'No Todo',
-                  style: TextStyle(fontSize: 20),
+            itemCount: todos.length,
+            itemBuilder: (context, i) {
+              final todo = todos[i];
+              return Slidable(
+                endActionPane:
+                ActionPane(motion: ScrollMotion(), children: [
+                  SlidableAction(
+                    onPressed: (f) {
+                      _delTodo(todo.id);
+                    },
+                    borderRadius: BorderRadius.circular(10),
+                    icon: Icons.delete,
+                    backgroundColor: Colors.red,
+                  )
+                ]),
+                child: ListTile(
+                  leading: Text(
+                    "${i + 1}.",
+                    style: TextStyle(fontSize: 18),
+                  ),
+                  trailing: Checkbox(
+                      value: todo.done,
+                      onChanged: (f) {
+                        _changeChecked(f, todo);
+                      }),
+                  title: Text(
+                    todo.label,
+                    style: TextStyle(
+                        decoration:
+                        todo.done ? TextDecoration.lineThrough : null),
+                  ),
                 ),
-              ),
+              );
+            })
+            : Center(
+          child: Text(
+            'No Todo',
+            style: TextStyle(fontSize: 20),
+          ),
+        ),
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: _addTodo,

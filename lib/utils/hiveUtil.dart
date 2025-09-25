@@ -132,4 +132,15 @@ class HiveUtil {
     final decoded = json.decode(jsonStr) as List;
     return decoded.map((e) => fromMap(Map<String, dynamic>.from(e))).toList();
   }
+  // TypeAdapt List
+// 保存列表
+  static Future<void> setObjectList<T>(String key, List<T> list) async {
+    await _box.put(key, list);
+  }
+
+// 获取列表
+  static List<T> getObjectList<T>(String key) {
+    return (_box.get(key, defaultValue: <T>[]) as List).cast<T>();
+  }
+
 }

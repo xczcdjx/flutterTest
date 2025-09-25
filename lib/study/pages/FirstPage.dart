@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:fluttertest/pages/HomePage.dart';
-import 'package:fluttertest/pages/otherPage.dart';
+
+import 'otherPage.dart';
 
 class FirstPage extends StatefulWidget {
   const FirstPage({super.key});

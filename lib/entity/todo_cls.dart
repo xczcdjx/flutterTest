@@ -3,7 +3,7 @@ import 'package:hive/hive.dart';
 part 'todo_cls.g.dart'; // 自动生成的文件
 
 @HiveType(typeId: 0) // 每个类唯一 ID
-class TodoCls {
+class TodoCls extends HiveObject{
   @HiveField(0)
   String id;
 
