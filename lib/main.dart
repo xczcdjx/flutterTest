@@ -3,9 +3,17 @@ import 'package:fluttertest/pages/FirstPage.dart';
 import 'package:fluttertest/pages/HomePage.dart';
 import 'package:fluttertest/pages/SecondPage.dart';
 import 'package:fluttertest/pages/TestPage.dart';
+import 'package:fluttertest/utils/hiveUtil.dart';
+import 'package:hive/hive.dart';
+import 'package:hive_flutter/adapters.dart';
+import 'package:oktoast/oktoast.dart';
 
-void main() {
-  runApp(const MyApp());
+void main() async{
+  WidgetsFlutterBinding.ensureInitialized();
+  await Hive.initFlutter();
+  // 打开默认的 Box
+  await HiveUtil.getInstance('flutterTest');
+  runApp(OKToast(child: const MyApp()));
 }
 
 class MyApp extends StatelessWidget {

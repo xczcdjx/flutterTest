@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:fluttertest/pages/HomePage.dart';
+import 'package:fluttertest/utils/hiveUtil.dart';
+import 'package:hive/hive.dart';
+import 'package:oktoast/oktoast.dart';
 
 class FirstPage extends StatefulWidget {
   const FirstPage({super.key});
@@ -21,20 +24,57 @@ class TodoCls {
   TodoCls copyWith({String? id, String? label, bool? done}) {
     return TodoCls.f(id ?? this.id, label ?? this.label, done ?? this.done);
   }
+
+  Map<String, dynamic> toMap() {
+    return {
+      'id': id,
+      'label': label,
+      'done': done,
+    };
+  }
+
+  factory TodoCls.fromMap(Map<dynamic, dynamic> map) {
+    return TodoCls.f(
+      map['id'] as String,
+      map['label'] as String,
+      map['done'] as bool,
+    );
+  }
 }
 
 class _FirstPageState extends State<FirstPage> {
-  List<TodoCls> todos = [
+ /* List<TodoCls> todos = [
     TodoCls.f("1", "上班", true),
     TodoCls(id: "2", label: "摸鱼"),
     TodoCls(id: "3", label: "学习"),
-  ];
+  ];*/
+
+  List<TodoCls> todos=HiveUtil.getList<TodoCls>('todos', (map) => TodoCls.fromMap(map));
 
   // textController
   TextEditingController todoController = TextEditingController();
 
   void greetMsgUser() {
     setState(() {});
+  }
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    // _initHive();
+  }
+
+  Future<void> _initHive() async {
+    final saveTodos =
+        HiveUtil.getList<TodoCls>('todos', (map) => TodoCls.fromMap(map));
+    setState(() {
+      todos = saveTodos;
+    });
+  }
+
+  Future<void> _saveHive() async {
+    await HiveUtil.setList<TodoCls>('todos', todos, (t) => t.toMap());
   }
 
   void _changeChecked(f, td) {
@@ -45,6 +85,7 @@ class _FirstPageState extends State<FirstPage> {
     setState(() {
       todos = newTodos;
     });
+    _saveHive();
   }
 
   void _addTodo() {
@@ -71,6 +112,8 @@ class _FirstPageState extends State<FirstPage> {
                         TodoCls(id: DateTime.timestamp().toString(), label: t),
                         ...todos
                       ];
+                      showToast('新增成功');
+                      _saveHive();
                       FocusScope.of(context).unfocus();
                       todoController.clear();
                     });
@@ -85,6 +128,7 @@ class _FirstPageState extends State<FirstPage> {
     setState(() {
       todos = todos.where((t) => t.id != id).toList();
     });
+    _saveHive();
   }
 
   @override
@@ -100,6 +144,15 @@ class _FirstPageState extends State<FirstPage> {
             style: TextStyle(fontWeight: FontWeight.bold),
           ),
         ),
+        actions: [
+          ElevatedButton(onPressed: (){
+            setState(() {
+              todos=[];
+            });
+            HiveUtil.deleteKey("todos");
+            showToast('删除成功',position: ToastPosition.bottom);
+          }, child: Text("Clear All"))
+        ],
       ),
       // drawer
       body: Padding(
