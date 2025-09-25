@@ -3,27 +3,25 @@ import 'package:fluttertest/pages/FirstPage.dart' hide TodoCls;
 import 'package:fluttertest/pages/HomePage.dart';
 import 'package:fluttertest/pages/SecondPage.dart';
 import 'package:fluttertest/pages/TestPage.dart';
-import 'package:fluttertest/utils/hiveUtil.dart';
-import 'package:fluttertest/utils/hiveUtilTypedAdapter.dart';
-import 'package:hive/hive.dart';
-import 'package:hive_flutter/adapters.dart';
+
 import 'package:oktoast/oktoast.dart';
 
 import 'entity/todo_cls.dart';
 
 void main() async{
   WidgetsFlutterBinding.ensureInitialized();
-  await Hive.initFlutter();
+  // await Hive.initFlutter();
   // json存储方式
   // 打开默认的 Box
   // await HiveUtil.getInstance('flutterTest');
+
   // 适配版本
   // 初始化 Hive 并注册 TypeAdapter
-  await HiveUtilTypeAdapter.init(
+ /* await HiveUtilTypeAdapter.init(
     adapters: {
       TodoCls: TodoClsAdapter(), // typeId 对应你生成的 Adapter
     },
-  );
+  );*/
 
   runApp(OKToast(child: const MyApp()));
 }

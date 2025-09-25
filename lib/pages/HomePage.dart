@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:fluttertest/study/shopDemo/sHomePage.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -8,21 +9,8 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-  int count=0;
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: Center(child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-        Text("Home Page"),
-        Text("Count ${count}"),
-        TextButton(onPressed: (){
-          setState(() {
-            count+=1;
-          });
-        }, child: Text("count ++"))
-      ],)),
-    );
+    return SHomePage();
   }
 }
