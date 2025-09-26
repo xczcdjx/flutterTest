@@ -15,8 +15,7 @@ class _BotNavBarState extends State<BotNavBar> {
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding:
-          EdgeInsets.only(bottom: ScreenUtil.bottomBarHeight(context) + 10),
+      padding: EdgeInsets.only(bottom: ScreenUtil.bottomBarHeight(context) + 10),
       child: GNav(
           color: Colors.grey[400],
           activeColor: Colors.grey.shade700,
