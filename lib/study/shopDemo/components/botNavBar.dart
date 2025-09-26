@@ -18,6 +18,7 @@ class _BotNavBarState extends State<BotNavBar> {
       padding: EdgeInsets.only(bottom: ScreenUtil.bottomBarHeight(context) + 10),
       child: GNav(
           color: Colors.grey[400],
+          gap: 8,
           activeColor: Colors.grey.shade700,
           tabActiveBorder: Border.all(color: Colors.white),
           tabBackgroundColor: Colors.grey.shade100,

@@ -138,7 +138,8 @@ class _TodoAdapterPageState extends State<TodoAdapterPage> {
             itemCount: todos.length,
             itemBuilder: (context, i) {
               final todo = todos[i];
-              return Slidable(
+              return
+                Slidable(
                 endActionPane:
                 ActionPane(motion: ScrollMotion(), children: [
                   SlidableAction(

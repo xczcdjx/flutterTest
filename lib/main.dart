@@ -3,12 +3,14 @@ import 'package:fluttertest/pages/FirstPage.dart' hide TodoCls;
 import 'package:fluttertest/pages/HomePage.dart';
 import 'package:fluttertest/pages/SecondPage.dart';
 import 'package:fluttertest/pages/TestPage.dart';
+import 'package:fluttertest/study/shopDemo/state.dart' show CartState;
 
 import 'package:oktoast/oktoast.dart';
+import 'package:provider/provider.dart';
 
 import 'entity/todo_cls.dart';
 
-void main() async{
+void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   // await Hive.initFlutter();
   // json存储方式
@@ -17,13 +19,16 @@ void main() async{
 
   // 适配版本
   // 初始化 Hive 并注册 TypeAdapter
- /* await HiveUtilTypeAdapter.init(
+  /* await HiveUtilTypeAdapter.init(
     adapters: {
       TodoCls: TodoClsAdapter(), // typeId 对应你生成的 Adapter
     },
   );*/
 
-  runApp(OKToast(child: const MyApp()));
+  // provider 状态管理
+  runApp(OKToast(
+    child: ChangeNotifierProvider(create: (_) => CartState(), child: MyApp()),
+  ));
 }
 
 class MyApp extends StatelessWidget {
@@ -33,7 +38,8 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      debugShowCheckedModeBanner: false, // 隐藏debug标志
+      debugShowCheckedModeBanner: false,
+      // 隐藏debug标志
       title: 'Flutter Test',
       theme: ThemeData(
         primaryColor: Colors.yellow,
@@ -42,9 +48,9 @@ class MyApp extends StatelessWidget {
       ),
       home: const FirstPage(),
       routes: {
-        '/homePage':(ctx)=>HomePage(),
-        '/testPage':(ctx)=>TestPage(),
-        '/secondPage':(ctx)=>SecondPage(),
+        '/homePage': (ctx) => HomePage(),
+        '/testPage': (ctx) => TestPage(),
+        '/secondPage': (ctx) => SecondPage(),
       },
       // const TestPage()
     );
