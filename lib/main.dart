@@ -3,7 +3,9 @@ import 'package:fluttertest/pages/FirstPage.dart' hide TodoCls;
 import 'package:fluttertest/pages/HomePage.dart';
 import 'package:fluttertest/pages/SecondPage.dart';
 import 'package:fluttertest/pages/TestPage.dart';
+import 'package:fluttertest/state/appState.dart';
 import 'package:fluttertest/study/shopDemo/state.dart' show CartState;
+import 'package:fluttertest/style/theme.dart';
 
 import 'package:oktoast/oktoast.dart';
 import 'package:provider/provider.dart';
@@ -27,7 +29,12 @@ void main() async {
 
   // provider 状态管理
   runApp(OKToast(
-    child: ChangeNotifierProvider(create: (_) => CartState(), child: MyApp()),
+    child: MultiProvider(
+        providers: [
+          ChangeNotifierProvider(create: (_) => CartState()),
+          ChangeNotifierProvider(create: (_) => AppState()),
+        ],
+        child: MyApp()),
   ));
 }
 
@@ -37,15 +44,14 @@ class MyApp extends StatelessWidget {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
+    final appState=context.watch<AppState>();
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       // 隐藏debug标志
       title: 'Flutter Test',
-      theme: ThemeData(
-        primaryColor: Colors.yellow,
-        colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
-        useMaterial3: true,
-      ),
+      theme: lightMode,
+      darkTheme: darkMode,
+      themeMode: appState.themeMode,
       home: const FirstPage(),
       routes: {
         '/homePage': (ctx) => HomePage(),
